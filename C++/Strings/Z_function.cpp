@@ -90,13 +90,13 @@ void initZFunction(String str, ZFunc& zfunc) {
 
 /*
     Return -1 if 'pattern' is not substring of 'str'
-	Elsewhere return index of 'pattern' in 'str'
+    Elsewhere return index of 'pattern' in 'str'
 
-	For this concatenating: 'pattern' + '#' + 'str',
-	where '#' - sentinel;
-	Then using Z-function. If Z-function on index 'ind' return value
-	that equals to size of 'pattern' then 'pattern' is in 'str'
-	from index 'ind'
+    For this concatenating: 'pattern' + '#' + 'str',
+    where '#' - sentinel;
+    Then using Z-function. If Z-function on index 'ind' return value
+    that equals to size of 'pattern' then 'pattern' is in 'str'
+    from index 'ind'
 */
 int indexOf(String str, String pattern) {
     ZFunc zfunc;
