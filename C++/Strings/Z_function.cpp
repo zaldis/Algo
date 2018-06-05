@@ -39,7 +39,7 @@ void naiveSearch(String str, int fromPref, int fromPattern, int to, int& matcher
 
     1) initialize z[1] with naive algorithm
     2) for all next indexes:
-	       - if (index >= right):
+           - if (index >= right):
                * start naive algorithm
            - else (left <= index && index <= right):
                * put calculated value in z[ind] (ind ... right)
