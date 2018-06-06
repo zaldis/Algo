@@ -16,20 +16,6 @@ void readStrings(std::istream& in, String& str, String& pattern) {
 }
 
 /*
-    The function that compare all symbols on 'str' from 'fromPref' and 'fromPattern'
-    Complexity O(n)
-*/
-void naiveSearch(String str, int fromPref, int fromPattern, int to, int& matcher) {
-    for (int itNext = fromPref; itNext < to - fromPattern; ++itNext) {
-        if (str.at(itNext) == str.at(fromPattern + itNext)) {
-            matcher++;
-        } else {
-            break;
-        }
-    }
-}
-
-/*
     The function that initialize Z-function.
 
     left - index of start last Z-block
@@ -51,39 +37,27 @@ void naiveSearch(String str, int fromPref, int fromPattern, int to, int& matcher
 */
 void initZFunction(String str, ZFunc& zfunc) {
     int left = 0, right = 0;
-    zfunc.assign(str.size() + 1, -1);
+    zfunc.assign(str.size() + 1, 0);
+    int len = str.size();
 
-    int countMatch = 0;
-    naiveSearch(str, 0, 1, str.size(), countMatch);
+    int countMatch;
 
-    zfunc[1] = countMatch;
-    left = 1;
-    right = countMatch;
-
-    for (int ind = 2; ind < str.size(); ++ind) {
+    for (int ind = 1; ind < str.size(); ++ind) {
         countMatch = 0;
-        if (ind >= right) {
-            naiveSearch(str, 0, ind, str.size(), countMatch);
-            zfunc[ind] = countMatch;
-            if (countMatch > 0) {
-                left = ind;
-                right = ind + countMatch;
-            }
-        } else {
-            int lastLength = right - ind + 1;
-            if (zfunc[ind - left + 1] <= lastLength) {
-                zfunc[ind] = zfunc[ind - left + 1];
-            } else {
-                zfunc[ind] = lastLength;
-            }
+		// if in Z-block
+        if (ind <= right) {
+            zfunc[ind] = std::min(zfunc[ind - left], right - ind + 1);
+        }
 
-            naiveSearch(str, right - left, right, str.size(), countMatch);
+		// naive algorithm
+        while (ind + zfunc[ind] < len && str[zfunc[ind]] == str[ind + zfunc[ind]]) {
+            zfunc[ind]++;
+        }
 
-            zfunc[ind] = countMatch;
-            if (countMatch > 0) {
-                left = ind;
-                right = ind + zfunc[ind];
-            }
+		// if new Z-block over previously Z-block
+        if (ind + zfunc[ind] - 1 > right) {
+            left = ind;
+            right = ind + zfunc[ind] - 1;
         }
     }
 }
