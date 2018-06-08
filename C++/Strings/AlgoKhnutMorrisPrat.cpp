@@ -1,3 +1,10 @@
+/*
+ *  The algorithm find substring in
+ *  source string. Using prefix-function.
+ *
+ *  Complexity O(n)
+*/
+
 #include <iostream>
 #include <fstream>
 #include <string>
