@@ -1,3 +1,11 @@
+/*
+ *  The algorithm find all maximum own borders for 
+ *  source string.
+ *
+ *  PrefixFunction[i] = maximum own border for 
+ *  source_string[0:i].
+*/
+
 #include <iostream>
 #include <string>
 #include <vector>
