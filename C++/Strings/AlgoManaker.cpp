@@ -1,3 +1,10 @@
+/*
+ * The algorithm find palindroms
+ * with odd and even length
+ *
+ * Complexity O(n)
+*/
+
 #include <iostream>
 #include <vector>
 #include <string>
