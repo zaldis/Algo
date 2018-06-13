@@ -25,12 +25,12 @@ class Node {
 
 public:
     Node() {
-		isTerminal = false;
+        isTerminal = false;
     }
 
-	map<char, Node>& getChildren() {
-		return children;
-	}
+    map<char, Node>& getChildren() {
+        return children;
+    }
 
     void setTerminal(bool newTerminal) {
         isTerminal = newTerminal;
@@ -43,8 +43,8 @@ void addPattern(Node* root, string pattern) {
     for (int it = 0; it < pattern.size(); ++it) {
         char symbol = pattern[it];
         if (node->getChildren().find(symbol) == node->getChildren().end()) {
-			node->getChildren()[symbol] = Node();
-		}
+            node->getChildren()[symbol] = Node();
+        }
 
         node = &(node->getChildren()[symbol]);
     }
