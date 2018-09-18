@@ -18,7 +18,7 @@ Node* Node::insert(Node* newNode) {
 	newNode->_next = next;
 	newNode->_prev = this;
 	_next = newNode;
-	_next->_prev = newNode;
+	next->_prev = newNode;
 
 	return newNode;
 }
