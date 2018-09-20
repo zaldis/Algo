@@ -5,15 +5,15 @@
 
 Point2D::Point2D(double _x, double _y): x(_x), y(_y) { }
 
-Point2D Point2D::operator+(Point2D& point) {
+Point2D Point2D::operator+(Point2D point) {
 	return Point2D(x + point.x, y + point.y);
 }
 
-Point2D Point2D::operator-(Point2D& point) {
+Point2D Point2D::operator-(Point2D point) {
 	return Point2D(x - point.x, y - point.y);
 }
 
-Point2D operator*(double value, Point2D& point) {
+Point2D operator*(double value, Point2D point) {
 	return Point2D(value * point.x, value * point.y);
 }
 
@@ -28,7 +28,7 @@ double Point2D::operator[] (char coordName) {
 	}
 }
 
-int Point2D::operator== (Point2D& point) {
+int Point2D::operator== (Point2D point) {
 	return (x == point.x) && (y == point.y);
 }
 
@@ -102,4 +102,17 @@ double Point2D::polarAngle(void) {
 
 double Point2D::length() {
 	return std::sqrt(x*x + y*y);
+}
+
+double Point2D::distance(Edge& edge) {
+	Edge cEdge(edge);
+	cEdge.flip().rot();
+	Point2D normal(*(cEdge.dest) - *(cEdge.org));
+	normal = (1.0 / normal.length()) * normal;
+
+	Edge f(new Point2D(*this), new Point2D(*this + normal));
+	double t;
+	f.intersect(edge, t);
+
+	return t;
 }
