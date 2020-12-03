@@ -1,4 +1,7 @@
-def get_z_function(text):
+from typing import List
+
+
+def get_z_function(text: str) -> List[int]:
     """
         Z-function algorithm
 
@@ -9,6 +12,7 @@ def get_z_function(text):
         l, r - boundaries of the current largest common prefix
                in positions 0 and i
         z - resulting z-function
+        z[i] - largest common prefix from 0 and i positions of `text`
     """
     n = len(text)
     z = [0] * n
