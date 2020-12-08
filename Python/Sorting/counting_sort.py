@@ -3,7 +3,7 @@
 
     Complexity:
         Time: O(n)
-        Memory: O(max), max - largest value in the input array
+        Space: O(max), max - largest value in the input array
 """
 
 import random
