@@ -2,6 +2,7 @@
     BigInteger is a data structure that emulates long arithmetic
 """
 
+from array import array
 from typing import Union
 
 
@@ -16,7 +17,7 @@ class BigInteger:
     BLOCK_BASE = 10 ** BLOCK_SIZE
 
     def __init__(self, number: str):
-        self._blocks = [0] * self.BLOCKS_COUNT
+        self._blocks = array('H', [0] * self.BLOCKS_COUNT)
         self._filled_blocks = 0
 
         for char in number:
@@ -53,6 +54,9 @@ class BigInteger:
             result_size += 1
         result._filled_blocks = result_size
         return result
+
+    def __repr__(self):
+        return f'{self.__class__}("{str(self)}")'
 
     def __str__(self):
         converted = list(
