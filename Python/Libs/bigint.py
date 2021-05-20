@@ -55,6 +55,28 @@ class BigInteger:
         result._filled_blocks = result_size
         return result
 
+    def __eq__(self, big_num: 'BigInteger') -> bool:
+        eq = False
+        if self._filled_blocks == big_num._filled_blocks:
+            eq = True
+            for block_a, block_b in zip(self._blocks, big_num._blocks):
+                eq &= block_a == block_b
+        return eq
+
+    def __gt__(self, big_num: 'BigInteger') -> bool:
+        greater = False
+        if self._filled_blocks > big_num._filled_blocks:
+            greater = True
+        elif self._filled_blocks == big_num._filled_blocks:
+            i = self._filled_blocks
+            while i > 0 and self._blocks[i] == big_num._blocks[i]:
+                i -= 1
+            greater = self._blocks[i] > big_num._blocks[i] 
+        return greater
+
+    def __ge__(self, big_num: 'BigInteger') -> bool:
+        return self == big_num or self > big_num
+
     def __repr__(self):
         return f'{self.__class__}("{str(self)}")'
 
@@ -91,4 +113,21 @@ if __name__ == '__main__':
     b = BigInteger.create('8293843')
     assert str(a + b) == '15417530', 'Sum operation is failed'
     print(f'{a} + {b} = {a + b}')
+    print('========================================')
+
+    # Comparison of two numbers
+    a = BigInteger.create('123456')
+    b = BigInteger.create('123456')
+    assert a == b
+    assert a >= b
+    assert a <= b
+    print(f'{a} == {b}')
+
+    a = BigInteger.create('1231238479')
+    b = BigInteger.create('1231487279')
+    assert not a >= b
+    assert b > a
+    assert a < b
+    assert a <= b
+    print(f'{b} > {a}')
     print('========================================')
