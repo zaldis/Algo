@@ -18,7 +18,7 @@ class BigInteger:
 
     def __init__(self, number: str):
         self._blocks = array('H', [0] * self.BLOCKS_COUNT)
-        self._filled_blocks = 0
+        self._filled_blocks = 1
 
         for char in number:
             digit = int(char)
@@ -29,7 +29,7 @@ class BigInteger:
                 self._blocks[i+1] = self._blocks[i+1] + (self._blocks[i] * 10) // self.BLOCK_BASE
                 self._blocks[i] = (self._blocks[i] * 10) % self.BLOCK_BASE
             self._blocks[0] += digit
-            if self._blocks[self._filled_blocks + 1] != 0:
+            if self._blocks[self._filled_blocks] != 0:
                 self._filled_blocks += 1
 
     @classmethod
@@ -41,19 +41,61 @@ class BigInteger:
     def __add__(self, other: 'BigInteger') -> 'BigInteger':
         result_size = max(self._filled_blocks, other._filled_blocks)
         result = BigInteger.create()
-        for i in range(result_size + 1):
+        for i in range(result_size):
             block_a = self._blocks[i]
             block_b = other._blocks[i]
-            result._blocks[i+1] = (
-                result._blocks[i] + block_a + block_b
-            ) // self.BLOCK_BASE
-            result._blocks[i] = (
-                result._blocks[i] + block_a + block_b
-            ) % self.BLOCK_BASE
-        if result._blocks[result_size+1] > 0:
+            base_sum = result._blocks[i] + block_a + block_b
+
+            result._blocks[i+1] = base_sum // self.BLOCK_BASE
+            result._blocks[i] = base_sum % self.BLOCK_BASE
+        if result._blocks[result_size] > 0:
             result_size += 1
         result._filled_blocks = result_size
         return result
+
+    def __mul__(self, other: 'BigInteger') -> 'BigInteger':
+        if other._filled_blocks == 1:
+            return self._mult_by_block(other._blocks[0])
+        return self._mult_by_num(other)
+
+    def _mult_by_block(self, block: int) -> 'BigInteger':
+        result = BigInteger.create()
+
+        for i in range(self._filled_blocks):
+            block_i = self._blocks[i]
+            base_mult = result._blocks[i] + block_i * block
+            result._blocks[i+1] = base_mult // self.BLOCK_BASE
+            result._blocks[i] = base_mult % self.BLOCK_BASE
+
+        result._refresh_filled_blocks(start=i)
+        result._sift_overflow_blocks()
+        return result
+
+    def _mult_by_num(self, num: 'BigInteger') -> 'BigInteger':
+        result = BigInteger.create()
+
+        for i in range(self._filled_blocks):
+            for j in range(num._filled_blocks):
+                base_mult = result._blocks[i+j] + self._blocks[i] * num._blocks[j]
+                result._blocks[i+j+1] += base_mult // self.BLOCK_BASE
+                result._blocks[i+j] = base_mult % self.BLOCK_BASE
+
+        result._refresh_filled_blocks(start=i+j-1)
+        result._sift_overflow_blocks()
+        return result
+
+    def _sift_overflow_blocks(self):
+        i = self._filled_blocks - 1
+        while self._blocks[i] >= self.BLOCK_BASE:
+            self._blocks[i+1] = self._blocks[i] // self.BLOCK_BASE
+            self._blocks[i] = self._blocks[i] % self.BLOCK_BASE
+            i += 1
+            self._filled_blocks += 1 
+
+    def _refresh_filled_blocks(self, start=0):
+        while start < self.BLOCKS_COUNT and self._blocks[start] != 0:
+            start += 1
+        self._filled_blocks = start
 
     def __eq__(self, big_num: 'BigInteger') -> bool:
         eq = False
@@ -84,7 +126,7 @@ class BigInteger:
         converted = list(
             map(
                 lambda block: str(block).zfill(self.BLOCK_SIZE),
-                reversed(self._blocks[:self._filled_blocks+1])
+                reversed(self._blocks[:self._filled_blocks])
             )
         )
         return ''.join(converted).lstrip('0') or '0'
@@ -130,4 +172,18 @@ if __name__ == '__main__':
     assert a < b
     assert a <= b
     print(f'{b} > {a}')
+    print('========================================')
+
+    # Multiplication by block
+    a = BigInteger.create('1111111')
+    b = BigInteger.create('1000')
+    assert a * b == BigInteger.create('1111111000')
+    print(f'{a} * {b} == {a * b}')
+    print('========================================')
+
+    # Multiplication by BigInteger
+    a = BigInteger.create('1111111')
+    b = BigInteger.create('1000000')
+    assert a * b == BigInteger.create('1111111000000')
+    print(f'{a} * {b} == {a * b}')
     print('========================================')
