@@ -1,6 +1,7 @@
 """
     BigInteger is a data structure that emulates long arithmetic
 """
+import copy
 
 from array import array
 from typing import Union
@@ -17,7 +18,7 @@ class BigInteger:
     BLOCK_BASE = 10 ** BLOCK_SIZE
 
     def __init__(self, number: str):
-        self._blocks = array('H', [0] * self.BLOCKS_COUNT)
+        self._blocks = array('h', [0] * self.BLOCKS_COUNT)
         self._filled_blocks = 1
 
         for char in number:
@@ -52,6 +53,26 @@ class BigInteger:
             result_size += 1
         result._filled_blocks = result_size
         return result
+
+    def __sub__(self, other: 'BigInteger') -> 'BigInteger':
+        result = copy.deepcopy(self)
+        result -= other
+        return result
+
+    def __isub__(self, other: 'BigInteger') -> 'BigInteger':
+        if self < other:
+            raise ValueError(f'Left operand should be greater than right. {self} - {other}')
+
+        for i in range(other._filled_blocks):
+            self._blocks[i] -= other._blocks[i]
+            if self._blocks[i] < 0:
+                j = i
+                while j < other._filled_blocks and self._blocks[j] < 0:
+                    self._blocks[j] += self.BLOCK_BASE
+                    self._blocks[j+1] -= 1
+                    j += 1
+        self._refresh_filled_blocks()
+        return self
 
     def __mul__(self, other: 'BigInteger') -> 'BigInteger':
         if other._filled_blocks == 1:
@@ -93,9 +114,10 @@ class BigInteger:
             self._filled_blocks += 1 
 
     def _refresh_filled_blocks(self, start=0):
-        while start < self.BLOCKS_COUNT and self._blocks[start] != 0:
+        while start < self.BLOCKS_COUNT:
+            if self._blocks[start] != 0:
+                self._filled_blocks = start + 1
             start += 1
-        self._filled_blocks = start
 
     def __eq__(self, big_num: 'BigInteger') -> bool:
         eq = False
@@ -186,4 +208,15 @@ if __name__ == '__main__':
     b = BigInteger.create('1000000')
     assert a * b == BigInteger.create('1111111000000')
     print(f'{a} * {b} == {a * b}')
+    print('========================================')
+
+    # Subtraction
+    a = BigInteger.create(100000)
+    b = BigInteger.create(1)
+
+    assert a - b == BigInteger.create(99999)
+    print(f'{a} - {b} == {a - b}')
+
+    a -= b
+    assert a == BigInteger.create(99999)
     print('========================================')
