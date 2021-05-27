@@ -88,7 +88,7 @@ class BigInteger:
             result._blocks[i+1] = base_mult // self.BLOCK_BASE
             result._blocks[i] = base_mult % self.BLOCK_BASE
 
-        result._refresh_filled_blocks(start=i)
+        result._refresh_filled_blocks()
         result._sift_overflow_blocks()
         return result
 
@@ -101,7 +101,7 @@ class BigInteger:
                 result._blocks[i+j+1] += base_mult // self.BLOCK_BASE
                 result._blocks[i+j] = base_mult % self.BLOCK_BASE
 
-        result._refresh_filled_blocks(start=i+j-1)
+        result._refresh_filled_blocks()
         result._sift_overflow_blocks()
         return result
 
@@ -113,11 +113,11 @@ class BigInteger:
             i += 1
             self._filled_blocks += 1 
 
-    def _refresh_filled_blocks(self, start=0):
-        while start < self.BLOCKS_COUNT:
+    def _refresh_filled_blocks(self):
+        self._filled_blocks = 1
+        for start in range(self.BLOCKS_COUNT):
             if self._blocks[start] != 0:
                 self._filled_blocks = start + 1
-            start += 1
 
     def __eq__(self, big_num: 'BigInteger') -> bool:
         eq = False
