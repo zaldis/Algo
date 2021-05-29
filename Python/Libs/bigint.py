@@ -4,7 +4,7 @@
 import copy
 
 from array import array
-from typing import Union
+from typing import Tuple, Union
 
 
 class BigInteger:
@@ -54,30 +54,75 @@ class BigInteger:
         result._filled_blocks = result_size
         return result
 
-    def __sub__(self, other: 'BigInteger') -> 'BigInteger':
+    def __sub__(self, b: 'BigInteger') -> 'BigInteger':
         result = copy.deepcopy(self)
-        result -= other
+        result -= b
         return result
 
-    def __isub__(self, other: 'BigInteger') -> 'BigInteger':
-        if self < other:
-            raise ValueError(f'Left operand should be greater than right. {self} - {other}')
+    def __isub__(self, b: 'BigInteger') -> 'BigInteger':
+        self.__inline_subtraction(b)
+        return self
 
-        for i in range(other._filled_blocks):
-            self._blocks[i] -= other._blocks[i]
-            if self._blocks[i] < 0:
+    def __sub(self, b: 'BigInteger', shift=0) -> 'BigInteger':
+        result = copy.deepcopy(self)
+        result.__inline_subtraction(b, shift)
+        return result
+
+    def __inline_subtraction(self, b: 'BigInteger', shift=0) -> None:
+        if self.__is_less(b, shift):
+            raise ValueError(f'Left operand should be greater than right. {self} - {b}')
+
+        for i in range(b._filled_blocks):
+            self._blocks[i+shift] -= b._blocks[i]
+            if self._blocks[i+shift] < 0:
                 j = i
-                while j < other._filled_blocks and self._blocks[j] < 0:
-                    self._blocks[j] += self.BLOCK_BASE
-                    self._blocks[j+1] -= 1
+                while j < b._filled_blocks and self._blocks[j+shift] < 0:
+                    self._blocks[j+shift] += self.BLOCK_BASE
+                    self._blocks[j+shift+1] -= 1
                     j += 1
         self._refresh_filled_blocks()
-        return self
 
     def __mul__(self, other: 'BigInteger') -> 'BigInteger':
         if other._filled_blocks == 1:
             return self._mult_by_block(other._blocks[0])
         return self._mult_by_num(other)
+
+    def __floordiv__(self, b: 'BigInteger') -> 'BigInteger':
+        rest = self
+        shift = self._filled_blocks - b._filled_blocks
+        if self.__is_less(b, shift):
+            shift -= 1
+
+        result = BigInteger.create()
+        result._filled_blocks = shift + 1
+        while shift >= 0:
+            result._blocks[shift], rest = self.__find_factor(rest, b, shift)
+            shift -= 1
+        return result
+
+    @staticmethod
+    def __find_factor(a: 'BigInteger', b: 'BigInteger', shift: int) -> Tuple[int, 'BigInteger']:
+        down = 0
+        up = BigInteger.BLOCK_BASE
+
+        while up - 1 > down:
+            c = b * BigInteger.create((up + down) // 2)
+            if a.__is_greater(c, shift):
+                down = (down + up) // 2
+            elif a.__is_equal(c, shift):
+                up = (up + down) // 2
+                down = up
+            else:
+                up = (down + up) // 2
+
+        factor = BigInteger.create((up + down) // 2)
+        c = factor * b
+        if a > c:
+            a = a.__sub(c, shift)
+        else:
+            c = c.__sub(a, shift)
+            a = c
+        return int(factor), a
 
     def _mult_by_block(self, block: int) -> 'BigInteger':
         result = BigInteger.create()
@@ -119,27 +164,42 @@ class BigInteger:
             if self._blocks[start] != 0:
                 self._filled_blocks = start + 1
 
-    def __eq__(self, big_num: 'BigInteger') -> bool:
+    def __eq__(self, b: 'BigInteger') -> bool:
+        return self.__is_equal(b)
+
+    def __is_equal(self, b: 'BigInteger', shift:int=0) -> bool:
         eq = False
-        if self._filled_blocks == big_num._filled_blocks:
+        if self._filled_blocks == b._filled_blocks + shift:
             eq = True
-            for block_a, block_b in zip(self._blocks, big_num._blocks):
-                eq &= block_a == block_b
+            for i in range(b._filled_blocks):
+                eq &= (self._blocks[i+shift] == b._blocks[i])
         return eq
 
     def __gt__(self, big_num: 'BigInteger') -> bool:
+        return self.__is_greater(big_num)
+
+    def __is_greater(self, big_num: 'BigInteger', shift=0) -> bool:
         greater = False
-        if self._filled_blocks > big_num._filled_blocks:
+        if self._filled_blocks > big_num._filled_blocks + shift:
             greater = True
-        elif self._filled_blocks == big_num._filled_blocks:
-            i = self._filled_blocks
-            while i > 0 and self._blocks[i] == big_num._blocks[i]:
+        elif self._filled_blocks == big_num._filled_blocks + shift:
+            i = big_num._filled_blocks
+            while i > 0 and self._blocks[i+shift] == big_num._blocks[i]:
                 i -= 1
-            greater = self._blocks[i] > big_num._blocks[i] 
+            greater = self._blocks[i+shift] > big_num._blocks[i] 
         return greater
 
     def __ge__(self, big_num: 'BigInteger') -> bool:
         return self == big_num or self > big_num
+
+    def __is_less(self, b: 'BigInteger', shift=0) -> bool:
+        return not any([
+            self.__is_equal(b, shift),
+            self.__is_greater(b, shift)
+        ])
+
+    def __int__(self):
+        return int(str(self))
 
     def __repr__(self):
         return f'{self.__class__}("{str(self)}")'
@@ -156,6 +216,8 @@ class BigInteger:
 
 
 if __name__ == '__main__':
+    import random
+
     big_num = BigInteger.create('0')
     print(big_num)
     print('========================================')
@@ -197,26 +259,24 @@ if __name__ == '__main__':
     print('========================================')
 
     # Multiplication by block
-    a = BigInteger.create('1111111')
-    b = BigInteger.create('1000')
-    assert a * b == BigInteger.create('1111111000')
-    print(f'{a} * {b} == {a * b}')
-    print('========================================')
-
-    # Multiplication by BigInteger
-    a = BigInteger.create('1111111')
-    b = BigInteger.create('1000000')
-    assert a * b == BigInteger.create('1111111000000')
-    print(f'{a} * {b} == {a * b}')
+    for i in range(100):
+        a = random.randint(0, 1000000)
+        b = random.randint(0, 1000000)
+        assert a * b == int(BigInteger.create(a) * BigInteger.create(b))
+        print(f'{a} * {b} == {a * b}')
     print('========================================')
 
     # Subtraction
-    a = BigInteger.create(100000)
-    b = BigInteger.create(1)
-
-    assert a - b == BigInteger.create(99999)
-    print(f'{a} - {b} == {a - b}')
-
-    a -= b
-    assert a == BigInteger.create(99999)
+    for i in range(100):
+        a = random.randint(0, 1000000)
+        b = random.randint(0, a)
+        assert a - b == int(BigInteger.create(a) - BigInteger.create(b))
+        print(f'{a} - {b} == {a - b}')
     print('========================================')
+
+    # Division
+    for i in range(100):
+        a = random.randint(0, 1000000)
+        b = random.randint(1, 1000000)
+        assert a // b == int(BigInteger.create(a) // BigInteger.create(b))
+        print(f'{a} // {b} == {a // b}')
