@@ -117,11 +117,8 @@ class BigInteger:
 
         factor = BigInteger.create((up + down) // 2)
         c = factor * b
-        if a > c:
+        if a > c and c != BigInteger.create(0):
             a = a.__sub(c, shift)
-        else:
-            c = c.__sub(a, shift)
-            a = c
         return int(factor), a
 
     def _mult_by_block(self, block: int) -> 'BigInteger':
@@ -280,3 +277,14 @@ if __name__ == '__main__':
         b = random.randint(1, 1000000)
         assert a // b == int(BigInteger.create(a) // BigInteger.create(b))
         print(f'{a} // {b} == {a // b}')
+    print('========================================')
+
+    # Sum from 1 .. N
+    for n in range(10**10, 10**10+100):
+        bn = BigInteger.create(n)
+        a = (
+            bn * (bn + BigInteger.create(1)) // BigInteger.create(2)
+        )
+
+        b = n * (n + 1) // 2
+        assert int(a) == b
