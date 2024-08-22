@@ -22,17 +22,3 @@ def binary_search(array: list, search_item) -> int:
     if len(array) and array[mid] == search_item:
         return mid
     return -1
-
-
-assert binary_search([], 12) == -1
-assert binary_search([10], 10) == 0
-
-assert binary_search([1, 2, 3], 1) == 0
-assert binary_search([1, 2, 3], 2) == 1
-assert binary_search([1, 2, 3], 3) == 2
-
-assert binary_search([1, 2, 2, 2, 4], 2) in {1, 2, 3}
-
-assert binary_search([1, 2, 4, 4, 5, 6], 3) == -1
-
-print("Well done!")

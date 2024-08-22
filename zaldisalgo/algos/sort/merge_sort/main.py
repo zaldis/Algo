@@ -40,24 +40,7 @@ class MergeSorter:
         return self._arr
 
 
-sorter = MergeSorter([])
-sorter.sort()
-assert sorter.array == []
-
-sorter = MergeSorter([1])
-sorter.sort()
-assert sorter.array == [1]
-
-sorter = MergeSorter([1, 2, 3])
-sorter.sort()
-assert sorter.array == [1, 2, 3]
-
-sorter = MergeSorter([5, 1, 3, -2, 11, 3])
-sorter.sort()
-assert sorter.array == [-2, 1, 3, 3, 5, 11]
-
-sorter = MergeSorter([10, 9, 8, 0, -1])
-sorter.sort()
-assert sorter.array == [-1, 0, 8, 9, 10]
-
-print("Well done!")
+def merge_sort(array) -> list:
+    sorter = MergeSorter(array)
+    sorter.sort()
+    return sorter.array

@@ -1,8 +1,6 @@
 import random
 
-
-def swap(arr: list, ind_a: int, ind_b: int) -> None:
-    arr[ind_a], arr[ind_b] = arr[ind_b], arr[ind_a]
+from zaldisalgo.utils.array import swap
 
 
 class QuickSorter:
@@ -13,7 +11,7 @@ class QuickSorter:
     def array(self) -> list:
         return self._arr
 
-    def sort(self, left_bound = None, right_bound = None) -> None:
+    def sort(self, left_bound=None, right_bound=None) -> None:
         if left_bound is None:
             left_bound = 0
         if right_bound is None:
@@ -43,24 +41,7 @@ class QuickSorter:
         return last_pos_before_pivot
 
 
-sorter = QuickSorter([])
-sorter.sort()
-assert sorter.array == []
-
-sorter = QuickSorter([1])
-sorter.sort()
-assert sorter.array == [1]
-
-sorter = QuickSorter([1, 2, 3])
-sorter.sort()
-assert sorter.array == [1, 2, 3]
-
-sorter = QuickSorter([5, 1, 3, -2, 11, 3])
-sorter.sort()
-assert sorter.array == [-2, 1, 3, 3, 5, 11]
-
-sorter = QuickSorter([10, 9, 8, 0, -1])
-sorter.sort()
-assert sorter.array == [-1, 0, 8, 9, 10]
-
-print("Well done!")
+def quick_sort(array) -> list:
+    sorter = QuickSorter(array)
+    sorter.sort()
+    return sorter.array

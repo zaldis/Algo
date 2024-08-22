@@ -4,7 +4,7 @@ class PatternSearcher:
         self._biggest_common_boundaries = []
         self._separator = '#'  # Text and pattern must not contain this symbol
 
-    def search(self, pattern: str) -> int:
+    def get_substring_count(self, pattern: str) -> int:
         source = pattern + self._separator + self._text
         self._find_biggest_common_boundaries(source)
 
@@ -26,16 +26,6 @@ class PatternSearcher:
             self._biggest_common_boundaries[pos] = curr_common_boundary_size
 
 
-searcher = PatternSearcher("aba")
-assert searcher.search("aba") == 1
-
-searcher = PatternSearcher("sadasda")
-assert searcher.search("sda") == 1
-
-searcher = PatternSearcher("abababa")
-assert searcher.search("aba") == 3
-
-searcher = PatternSearcher("aaaa")
-assert searcher.search("b") == 0
-
-print("Well done!")
+def get_substring_count(source: str, pattern: str) -> int:
+    searcher = PatternSearcher(source)
+    return searcher.get_substring_count(pattern)

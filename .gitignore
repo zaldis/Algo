@@ -1,0 +1,4 @@
+dist/
+.idea/
+tests/**/__pycache__/
+zaldisalgo/**/__pycache__/
