@@ -1,5 +1,7 @@
 # Graph
 
+
+## Undirected Graph
 Implementation is based on an adjacency list which helps to optimize memory usage when spread between
 node IDs quiet big.
 

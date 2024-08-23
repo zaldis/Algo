@@ -25,15 +25,3 @@ class HashTable:
         self._table[index].append(
             (key, value, )
         )
-
-
-hash_table = HashTable()
-hash_table[1] = 'Petia'
-hash_table[2] = 'Vasia'
-hash_table[3] = 'Roma'
-
-assert hash_table[1] == 'Petia'
-assert hash_table[2] == 'Vasia'
-assert hash_table[3] == 'Roma'
-
-print("well done!")
