@@ -1,0 +1,2 @@
+class EmptyHeapError(Exception):
+    pass

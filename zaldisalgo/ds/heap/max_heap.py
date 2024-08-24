@@ -1,5 +1,4 @@
-class EmptyHeapError(Exception):
-    pass
+from .errors import EmptyHeapError
 
 
 class MaxHeap:
