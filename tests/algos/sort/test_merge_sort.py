@@ -1,4 +1,4 @@
-from zaldisalgo.algos.sort.merge_sort.main import merge_sort
+from zaldisalgo.algos.sort import merge_sort
 
 
 def test_empty_array():

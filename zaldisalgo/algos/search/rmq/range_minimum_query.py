@@ -79,22 +79,12 @@ class MinimumValueSegmentTree:
         update_segment_tree(self.ROOT_NODE_IND)
 
 
-segment_tree = MinimumValueSegmentTree([1])
-assert segment_tree.get_minimum_value(0, 0) == 1
-segment_tree.update_value(0, 5)
-assert segment_tree.get_minimum_value(0, 0) == 5
+class RangeMinimumQuery:
+    def __init__(self, source_array: list[int]) -> None:
+        self._segment_tree = MinimumValueSegmentTree(source_array)
 
-segment_tree = MinimumValueSegmentTree([1, 5, 2, 4, 3])
-assert segment_tree.get_minimum_value(0, 4) == 1
-segment_tree.update_value(2, 6)
-assert segment_tree.get_minimum_value(2, 4) == 3
+    def get_minimum_value(self, index_from: int, index_to: int) -> int:
+        return self._segment_tree.get_minimum_value(index_from, index_to)
 
-segment_tree = MinimumValueSegmentTree([1, -1, 5, 8, 3, 2, 0, 7])
-assert segment_tree.get_minimum_value(0, 7) == -1
-segment_tree.update_value(1, 10)
-assert segment_tree.get_minimum_value(0, 7) == 0
-
-segment_tree = MinimumValueSegmentTree([1, -1, 5, 8, 3, 2])
-assert segment_tree.get_minimum_value(0, 5) == -1
-
-print("Well done!")
+    def update_value(self, index: int, value: int) -> None:
+        self._segment_tree.update_value(index, value)

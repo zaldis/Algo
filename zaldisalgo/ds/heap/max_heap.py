@@ -56,29 +56,3 @@ class MaxHeap:
     @staticmethod
     def _get_children_positions(parent_position: int) -> tuple[int, int]:
         return 2 * parent_position, 2 * parent_position + 1
-
-
-heap = MaxHeap(initial_items=[1, 2, 3, 4, 5])
-assert heap.get_max_item() == 5
-
-heap.add_item(1)
-heap.add_item(2)
-heap.add_item(3)
-assert heap.get_max_item() == 5
-
-heap.add_item(10)
-assert heap.get_max_item() == 10
-
-assert heap.extract_max_item() == 10
-assert heap.extract_max_item() == 5
-assert heap.extract_max_item() == 4
-assert heap.extract_max_item() == 3
-assert heap.extract_max_item() == 3
-assert heap.extract_max_item() == 2
-assert heap.extract_max_item() == 2
-assert heap.extract_max_item() == 1
-assert heap.extract_max_item() == 1
-
-assert heap.size == 0
-
-print("Well done!")

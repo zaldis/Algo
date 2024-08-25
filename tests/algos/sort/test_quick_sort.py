@@ -1,4 +1,4 @@
-from zaldisalgo.algos.sort.quick_sort.main import quick_sort
+from zaldisalgo.algos.sort import quick_sort
 
 
 def test_empty_array():

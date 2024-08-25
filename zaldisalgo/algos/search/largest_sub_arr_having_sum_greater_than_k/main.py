@@ -75,23 +75,3 @@ class LengthSearcherOfLargestSubarrayHavingSumGreaterThanProvided:
             self._min_index_per_prefix_sum.append(
                 min(self._min_index_per_prefix_sum[i-1], prefixSumForI.prefix_index)
             )
-
-
-assert LengthSearcherOfLargestSubarrayHavingSumGreaterThanProvided(sum_threshold=5).search(
-    array=[-2, 1, 6, -3]
-) == 2  # {1, 6}
-
-assert LengthSearcherOfLargestSubarrayHavingSumGreaterThanProvided(sum_threshold=0).search(
-    array=[1, 1, 1, 1, 1],
-) == 5  # {1, 1, 1, 1, 1}
-
-assert LengthSearcherOfLargestSubarrayHavingSumGreaterThanProvided(sum_threshold=0).search(
-    array=[-1, -1, -1],
-) == 0  # { }
-
-assert LengthSearcherOfLargestSubarrayHavingSumGreaterThanProvided(sum_threshold=10).search(
-    array=[],
-) == 0  # { }
-
-
-print("Well Done!")
