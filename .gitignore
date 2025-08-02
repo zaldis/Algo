@@ -2,3 +2,4 @@ dist/
 .idea/
 tests/**/__pycache__/
 zaldisalgo/**/__pycache__/
+zaldisalgo/**/.DS_store
