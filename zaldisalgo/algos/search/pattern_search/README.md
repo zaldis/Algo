@@ -1,8 +1,8 @@
 # Knuth Morris Pratt algorithm
 
-Time Complexity: `O(N + M)`
-
-Memory Complexity: `O(N + M)`
+## Complexity
+* Time Complexity: `O(N + M)`
+* Memory Complexity: `O(N + M)`
 
 Where
 - `N` - length of the text

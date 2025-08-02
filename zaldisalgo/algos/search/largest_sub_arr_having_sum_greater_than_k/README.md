@@ -2,6 +2,7 @@
 
 Solution based on Prefix Sum and Binary Search.
 
-Time Complexity: `O(n * log(n))`
+## Complexity
 
-Memory Complexity: `O(n)`
+* Time Complexity: `O(n * log(n))`
+* Memory Complexity: `O(n)`

@@ -9,5 +9,5 @@ Time complexity: `O(E)`
 
 Memory complexity: `O(N * E)`
 
-- `E` - count of edges
-- `N` - count of nodes
+* `E` - count of edges
+* `N` - count of nodes
