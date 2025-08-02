@@ -2,10 +2,13 @@
 
 Implementation is based on array (which represents binary tree).
 
-Time Complexity:
+## Complexity
 
-- Building: `O(N)`
-- Fetching min/max: `O(1)`
-- Extracting min/max: `O(log N)`
+Time:
 
-Memory Complexity: `O(N)`
+* Building: `O(N)`
+* Fetching min/max: `O(1)`
+* Extracting min/max: `O(log N)`
+
+Memory: 
+* `O(N)`

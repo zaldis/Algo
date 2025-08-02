@@ -2,6 +2,8 @@ from typing import Hashable
 
 
 class HashTable:
+    """Separate chaining hash table"""
+
     def __init__(self, size: int = 1000) -> None:
         self._table = []
         for _ in range(size):
@@ -25,3 +27,11 @@ class HashTable:
         self._table[index].append(
             (key, value, )
         )
+
+
+if __name__ == '__main__':
+    hash_table = HashTable()
+    hash_table['name'] = 'Ivan'
+    hash_table['age'] = 20
+    print("Stored name is: ", hash_table['name'])
+    print("Stored age is: ", hash_table['age'])
