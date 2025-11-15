@@ -12,16 +12,16 @@ A Trie for the following keys: "A", "to", "tea", "ted", "ten", "i", "in", "inn".
 
 ## Algorithm Complexity
 
-* `N` - size of keys dictionary.
-* `P` - the length of the key (prefix).
-* `L` - is the total number of characters in all words that match the given prefix.
+* `n` - size of keys dictionary.
+* `p` - the length of the key (prefix).
+* `l` - is the total number of characters in all words that match the given prefix.
 
 <ins>Time</ins>:
 
-* [Building](#building): `O(total-chracters(N))`
-* [Insert operation](#insert): `O(P)`
-* [Search operation](#search): `O(P)`
-* [Autocomplete search](#autocomplete): `O(P + L)`
+* [Building](#building): `O(total-chracters(n))`
+* [Insert operation](#insert): `O(p)`
+* [Search operation](#search): `O(p)`
+* [Autocomplete search](#autocomplete): `O(p + l)`
 
 <ins>Memory</ins>: 
 * Overall tree: `O(total-characters(N))`

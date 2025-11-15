@@ -1,47 +1,73 @@
 import random
+from typing import Generic, Sequence, TypeVar
 
 from zaldisalgo.utils.array import swap
 
+T = TypeVar('T')
 
-class QuickSorter:
-    def __init__(self, arr: list) -> None:
-        self._arr = arr
 
-    @property
-    def array(self) -> list:
-        return self._arr
+def quick_sort(items: Sequence[T]) -> None:
+    _QuickSort(items).sort()
 
-    def sort(self, left_bound=None, right_bound=None) -> None:
-        if left_bound is None:
-            left_bound = 0
-        if right_bound is None:
-            right_bound = len(self.array)
 
-        if left_bound >= right_bound:
+class _QuickSort(Generic[T]):
+    def __init__(self, items: Sequence[T]) -> None:
+        self._items = items
+
+    def sort(self, start_index=None, end_index=None) -> None:
+        start_index = 0 if start_index is None else start_index
+        end_index = len(self._items) if end_index is None else end_index
+
+        if _is_range_with_single_element(start_index, end_index):
             return
 
-        pivot_pos = self._rand_partition(left_bound, right_bound)
-        self.sort(left_bound, pivot_pos)
-        self.sort(pivot_pos+1, right_bound)
+        pivot_pos = self._rand_partition(start_index, end_index)
+        self.sort(start_index, pivot_pos)
+        self.sort(pivot_pos + 1, end_index)
 
-    def _rand_partition(self, left_bound: int, right_bound: int) -> int:
-        rand_pos = random.randint(left_bound, right_bound-1)
-        swap(self.array, rand_pos, left_bound)
-        return self._partition(left_bound, right_bound)
+    def _rand_partition(self, start_index: int, end_index: int) -> int:
+        self._put_pivot_item_on_top(start_index, end_index)
+        return self._place_items_according_to_pivot(start_index, end_index)
 
-    def _partition(self, left_bound: int, right_bound: int) -> int:
-        pivot = self.array[left_bound]
-        before_pivot_pos = left_bound + 1
-        for after_pivot_pos in range(left_bound+1, right_bound):
-            if self.array[after_pivot_pos] < pivot:
-                swap(self.array, before_pivot_pos, after_pivot_pos)
-                before_pivot_pos += 1
-        last_pos_before_pivot = before_pivot_pos - 1
-        swap(self.array, left_bound, last_pos_before_pivot)
-        return last_pos_before_pivot
+    def _put_pivot_item_on_top(self, start_index: int, end_index: int):
+        rand_pos = random.randint(start_index, end_index-1)
+        pivot_pos = start_index
+        swap(self._items, rand_pos, pivot_pos)
+
+    def _place_items_according_to_pivot(self, start_index: int, end_index: int) -> int:
+        curr_pivot_pos = start_index
+        pivot = self._items[curr_pivot_pos]
+        expected_pivot_pos = curr_pivot_pos
+        for pos in range(curr_pivot_pos+1, end_index):
+            if self._items[pos] < pivot:
+                expected_pivot_pos += 1
+                swap(self._items, expected_pivot_pos, pos)
+        swap(self._items, curr_pivot_pos, expected_pivot_pos)
+        return expected_pivot_pos
 
 
-def quick_sort(array) -> list:
-    sorter = QuickSorter(array)
-    sorter.sort()
-    return sorter.array
+def _is_range_with_single_element(left_bound: int, right_bound: int) -> bool:
+    return left_bound >= right_bound
+
+
+if __name__ == '__main__':
+    from dataclasses import dataclass
+
+    @dataclass
+    class Person:
+        name: str
+        age: int
+
+        def __lt__(self, other):
+            return self.age.__lt__(other.age)
+
+    people = [
+        Person("Nikolai", 10),
+        Person("Anton", 10),
+        Person("Ivan", 25),
+        Person("Alex", 10),
+        Person("Anatolii", 15),
+        Person("Alisa", 10)
+    ]
+    quick_sort(people)
+    print(*people, sep='\n')

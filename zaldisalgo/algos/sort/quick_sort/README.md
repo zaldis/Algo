@@ -1,10 +1,19 @@
 # Quick Sort
 
-Time Complexity (approximately): `O(N * log(N))`
+## Complexity
 
-Time Complexity (worse case):
-```math
-O(N^{2})
-```
+* `n` - size of input array;
 
-Memory Complexity: `O(N)`
+<ins>Time</ins>:
+
+* In general: `O(n * log(n))`.
+* Worth case: `O(n^2)`.
+
+<ins>Memory</ins>:
+
+* Store input array: `O(n)`.
+
+## Implementation details
+
+[Visualisation](https://visualgo.net/en/sorting)
+
