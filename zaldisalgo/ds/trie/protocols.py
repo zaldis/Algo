@@ -4,14 +4,14 @@ T = TypeVar("T", bound=Hashable)
 
 
 class TrieProtocol(Sized, Protocol[T]):
-    def __contains__(self, key: Sequence[T]) -> bool:
+    def __contains__(self, path: Sequence[T]) -> bool:
         """Checks if the key was added
 
         :returns: True if key exists in the Trie
         """
         ...
 
-    def add(self, *keys: Sequence[T]) -> None:
+    def add(self, path: Iterable[T]) -> None:
         """Adds new keys to the Trie
 
         :param keys: sequence of keys which should be added to the Trie.
@@ -19,7 +19,7 @@ class TrieProtocol(Sized, Protocol[T]):
         """
         ...
 
-    def complete(self, prefix: Sequence[T]) -> Iterable[T]:
+    def complete(self, prefix: Sequence[T]) -> list[Sequence[T]]:
         """Autocomplete search
 
         :param prefix: prefix of search sequences.
